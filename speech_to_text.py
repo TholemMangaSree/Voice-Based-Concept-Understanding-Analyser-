@@ -21,7 +21,12 @@ def transcribe_audio(audio_path):
     # 3. Safe Execution: Wrap the transcription in a try-except block
     try:
         print(f"Processing audio safely: {os.path.basename(audio_path)}...")
-        result = model.transcribe(audio_path, fp16=False)
-        return result["text"].strip()
+       # We add an initial prompt containing filler words to force Whisper to transcribe them
+       result = model.transcribe(
+           audio_path, 
+           fp16=False, 
+           initial_prompt="Um, uh, well, you know, like, hmm, ah, so I am speaking."
+       )
+       return result["text"].strip()
     except Exception as e:
         return f"❌ Error during transcription: {str(e)}"
